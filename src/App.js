@@ -294,9 +294,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <button onClick={addColumn}>add column</button>
-      <button onClick={addRow}>add row</button>
-        <TopBar handleEnrichClick={handleEnrichClick} />
+        <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} />
         <Spreadsheet data={data} onChange={setData} columnLabels={columnLabels} styles={customStyles} />
         <ToastContainer />
     </div>

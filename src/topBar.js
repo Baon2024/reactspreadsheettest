@@ -17,7 +17,7 @@ import {
 import { Toaster } from './components/toast';
 //import { useToast } from "@/hooks/use-toast"
 
-export default function TopBar({ handleEnrichClick }) {
+export default function TopBar({ handleEnrichClick, addRow, addColumn }) {
   const [isLoading, setIsLoading] = useState(false);
   const [callStatus, setCallStatus] = useState({ success: 0, failed: 0, total: 0 });
   const [showToast, setShowToast] = useState(false);
@@ -82,6 +82,27 @@ export default function TopBar({ handleEnrichClick }) {
             >
               <History className="mr-2 h-4 w-4" />
               History
+            </Button>
+            
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={addRow}
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20"
+            >
+              
+              Add Row
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={addColumn}
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20"
+            >
+              
+              Add Column
             </Button>
 
             <DropdownMenu>
