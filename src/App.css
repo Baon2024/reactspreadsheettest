@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.react-spreadsheet {
+  border: 2px solid #4CAF50; /* Change the border */
+}
+
+.react-spreadsheet__cell {
+  background-color: #f9f9f9; /* Change cell background */
+  color: #333; /* Change text color */
+  border: 1px solid #ddd; /* Change cell border */
+}
+
+.react-spreadsheet__cell--selected {
+  background-color: #ffeeba !important; /* Highlight selected cell */
+}
+
