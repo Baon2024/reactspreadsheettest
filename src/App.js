@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import Spreadsheet from "react-spreadsheet";
-import { useEffect, useState } from 'react';
+import { cloneElement, useEffect, useState } from 'react';
 import TopBar from './topBar';
 import { ToastContainer, toast } from 'react-toastify';
 import ContextDrawer from './contextDrawer';
@@ -13,8 +13,10 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [callStatus, setCallStatus] = useState({ success: 0, failed: 0, total: 0 });
   const [showToast, setShowToast] = useState(false);
+  const [ question, setQuestion ] = useState([]);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
+  const [ columnLabels, setColumnLabels ] = useState(["Phone Number"]);
   const [contextText, setContextText] = useState("This spreadsheet contains contact information for various professionals.");
   const [data, setData] = useState([
     [{ value: "+447912345678" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }],
@@ -35,7 +37,7 @@ export default function App() {
   };
   
 
-  const columnLabels = ["Phone Number", ""];
+  //const columnLabels = ["Phone Number", ""];
 
   //presumabky just create lots of entry rows at the start
   //can always allow users to create new rows/columns later, programatically
@@ -165,7 +167,7 @@ export default function App() {
         })
       });*/
 
-      const spoofData = { formattedNumber, contextText}
+      const spoofData = { formattedNumber, contextText, question}
 
       const response = await fetch('http://localhost:5005/spoofEndpoint', { //so this sends data to backend
         method: 'POST',
@@ -293,6 +295,15 @@ export default function App() {
           });
         }
         insertReturnedData(dataFromCalls);
+        //make columnLabels equal phoneNumber + questions
+        console.log("value of question is:", question, "value of columnLabels is:", columnLabels);
+        let questionDuplicate = [...question];
+        console.log("clone of question is:", question);
+        questionDuplicate.unshift(columnLabels);
+        console.log("value of questionDuplicate now is:", questionDuplicate)
+        
+        setColumnLabels(questionDuplicate);
+
      //need to format returned data
     }
      
@@ -304,9 +315,9 @@ export default function App() {
 
   return (
     <div className="App">
-        <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} />
+        <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} columnLabels={columnLabels} setColumnLabels={setColumnLabels} />
         <Spreadsheet data={data} onChange={setData} columnLabels={columnLabels} styles={customStyles} />
-        <ContextDrawer onContextUpdate={handleContextUpdate} contextData={contextText} />
+        <ContextDrawer onContextUpdate={handleContextUpdate} contextData={contextText} question={question} setQuestion={setQuestion} />
     </div>
   );
 }

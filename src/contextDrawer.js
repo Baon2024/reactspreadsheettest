@@ -2,9 +2,12 @@ import { useState, useEffect } from "react"
 import { ChevronUp, ChevronDown } from "lucide-react"
 import { Textarea } from "./components/ui/textarea"
 import { Label } from "./components/ui/label"
+import { Button } from "./components/ui/button"
 
-const ContextDrawer = ({ contextData, onContextUpdate }) => {
+const ContextDrawer = ({ contextData, onContextUpdate, question, setQuestion }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [ questionBox, setQuestionBox ] = useState(0);
+  //const [ question, setQuestion ] = useState([]);
   const [contextText, setContextText] = useState(
     typeof contextData === "string" ? contextData : contextData?.summary || "Add spreadsheet context here...",
   )
@@ -28,6 +31,49 @@ const ContextDrawer = ({ contextData, onContextUpdate }) => {
       onContextUpdate(newValue)
     }
   }
+
+  useEffect(() => {
+    console.log("questionsBox is:", questionBox)
+    console.log("question is:", question)
+  },[questionBox, question])
+
+  function addQuestionBox() {
+    //needs to set questionBox state to prev +1
+    setQuestionBox(prev => prev + 1);
+  }
+
+  function removeQuestionBox() {
+    //needs to set questionBox state to prev +1
+    if (questionBox > 0) {
+    setQuestionBox(prev => prev -1 );
+    }
+  }
+ 
+  function setQuestionHandler(newQuestion, index) {
+    setQuestion((prevQuestions) => {
+      // Ensure prevQuestions is an array
+      if (!Array.isArray(prevQuestions)) {
+        prevQuestions = [];
+      }
+  
+      // Clone the previous state
+      const updatedQuestions = [...prevQuestions];
+  
+      // Ensure the specific index is an array (if needed)
+      if (!Array.isArray(updatedQuestions[index])) {
+        updatedQuestions[index] = ""; // Initialize as an empty string for text input
+      }
+  
+      // Set the value directly instead of appending
+      updatedQuestions[index] = newQuestion;
+  
+      console.log("Updated questions:", updatedQuestions);
+      return updatedQuestions;
+    });
+  }
+  
+  
+
 
   return (
     <>
@@ -66,6 +112,26 @@ const ContextDrawer = ({ contextData, onContextUpdate }) => {
                 Context Notes
               </Label>
             </div>
+            <Button
+            variant="ghost"
+              size="sm"
+              onClick={addQuestionBox}
+              className="bg-white text-amber-600 hover:bg-gray-100 hover:text-amber-700"
+            >
+            add question</Button>
+            <Button
+            variant="ghost"
+              size="sm"
+              onClick={removeQuestionBox}
+              className="bg-white text-amber-600 hover:bg-gray-100 hover:text-amber-700"
+            >
+            remove question</Button>
+            { [...Array(questionBox)].map((_, index) => (
+                <div key={index}>
+                  <label>enter question</label>
+                  <input value={question[index]} onChange={(e) => setQuestionHandler(e.target.value, index)} />
+                </div>
+            ))}
             <div className="py-2">
               <Textarea
                 id="spreadsheetContext"
