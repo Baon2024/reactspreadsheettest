@@ -258,10 +258,13 @@ export default function App() {
           setCallStatus(prev => ({ ...prev, failed: prev.failed + 1 }));
         }
   
-        const entry = [ phoneNumber, success];
+        //const entry = [ phoneNumber, success];
+        const entry = [phoneNumber, ...success.flat()];
         console.log("value of entry is:", entry);
         //if success variable contains returned data for the phonecall, add to dataFromCalls
         dataFromCalls.push(entry);
+        
+
       }
       console.log("dataFromCalls looks like this after all success call data returned and put in array:", dataFromCalls);
       //setData(dataFromCalls);
@@ -276,12 +279,12 @@ export default function App() {
             return prevData.map(row => {
               // Find matching phone number
               const match = returnedData.find(item => item[0] === row[0].value);
+              console.log("value of match is:", match);
               
               if (match) {
                 return [
-                  ...row.slice(0, 1),  // Keep first column (phone number)
-                  { value: match[1] }, // Replace second column with new value
-                  ...row.slice(2)       // Keep the rest of the row unchanged
+                  { value: match[0] }, // Keep phone number
+                  ...match.slice(1).map(value => ({ value })) // Map all additional values
                 ];
               }
         
