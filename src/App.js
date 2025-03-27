@@ -4,6 +4,7 @@ import Spreadsheet from "react-spreadsheet";
 import { useEffect, useState } from 'react';
 import TopBar from './topBar';
 import { ToastContainer, toast } from 'react-toastify';
+import ContextDrawer from './contextDrawer';
 //import { Button, Navbar, Dropdown, Spinner, Toast } from 'flowbite-react';
 
 
@@ -14,6 +15,7 @@ export default function App() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
+  const [contextText, setContextText] = useState("This spreadsheet contains contact information for various professionals.");
   const [data, setData] = useState([
     [{ value: "+447912345678" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }],
     [{ value: "+447912345679" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }, { value: "" }],
@@ -139,14 +141,14 @@ export default function App() {
     
 
       //this correctly returns error for those that don't match
-    /*if (!contextText) {
+    if (!contextText) {
       console.error(`No context text set`);
       setToastMessage(`No context text set`);
       setToastType('warning');
       setShowToast(true);
       setIsLoading(false);
       return;
-    }*/
+    }
       
       console.log(`Making call to formatted number: ${formattedNumber} (original: ${phoneNumber})`);
       
@@ -163,7 +165,7 @@ export default function App() {
         })
       });*/
 
-      const spoofData = { formattedNumber, /*contextText*/}
+      const spoofData = { formattedNumber, contextText}
 
       const response = await fetch('http://localhost:5005/spoofEndpoint', { //so this sends data to backend
         method: 'POST',
@@ -291,12 +293,17 @@ export default function App() {
      //need to format returned data
     }
      
+    const handleContextUpdate = (newContext) => {
+      setContextText(newContext);
+      // In a real app, you would also save this to a database or API
+      console.log("Context updated:", newContext);
+    };
 
   return (
     <div className="App">
         <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} />
         <Spreadsheet data={data} onChange={setData} columnLabels={columnLabels} styles={customStyles} />
-        <ToastContainer />
+        <ContextDrawer onContextUpdate={handleContextUpdate} contextData={contextText} />
     </div>
   );
 }
