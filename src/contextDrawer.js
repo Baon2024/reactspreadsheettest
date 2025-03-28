@@ -42,10 +42,22 @@ const ContextDrawer = ({ contextData, onContextUpdate, question, setQuestion }) 
     setQuestionBox(prev => prev + 1);
   }
 
-  function removeQuestionBox() {
+  /*function removeQuestionBox() {
     //needs to set questionBox state to prev +1
     if (questionBox > 0) {
     setQuestionBox(prev => prev -1 );
+    }
+  }*/
+
+  function removeQuestionBox() {
+    if (questionBox > 0) {
+      setQuestionBox(prev => prev - 1);
+  
+      setQuestion(prevQuestions => {
+        const updatedQuestions = [...prevQuestions];
+        updatedQuestions.pop(); // Remove the last question in the array
+        return updatedQuestions;
+      });
     }
   }
  

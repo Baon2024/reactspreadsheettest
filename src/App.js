@@ -101,6 +101,10 @@ export default function App() {
     console.log("callStatus after filtering now is:", callStatus);
   },[callStatus]);
 
+  useEffect(() => {
+    console.log("question is:", question);
+  },[question])
+
   const makePhoneCall = async (phoneNumber) => {
     try {
       // Format the phone number with +44 prefix
@@ -239,7 +243,7 @@ export default function App() {
       //update number of phone calls needed to make
       setCallStatus(prev => ({ ...prev, total: phoneNumbers.length }));
     
-      
+     
       
          
       // Make calls sequentially to avoid overwhelming the API
@@ -299,7 +303,7 @@ export default function App() {
         console.log("value of question is:", question, "value of columnLabels is:", columnLabels);
         let questionDuplicate = [...question];
         console.log("clone of question is:", question);
-        questionDuplicate.unshift(columnLabels);
+        questionDuplicate.unshift(columnLabels[0]);
         console.log("value of questionDuplicate now is:", questionDuplicate)
         
         setColumnLabels(questionDuplicate);
