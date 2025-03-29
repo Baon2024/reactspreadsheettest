@@ -17,7 +17,7 @@ import {
 import { Toaster } from './components/toast';
 //import { useToast } from "@/hooks/use-toast"
 
-export default function TopBar({ handleEnrichClick, addRow, addColumn }) {
+export default function TopBar({ handleEnrichClick, addRow, addColumn, shuffleHandler}) {
   const [isLoading, setIsLoading] = useState(false);
   const [callStatus, setCallStatus] = useState({ success: 0, failed: 0, total: 0 });
   const [showToast, setShowToast] = useState(false);
@@ -39,6 +39,8 @@ export default function TopBar({ handleEnrichClick, addRow, addColumn }) {
   }
 
   let darkMode;
+
+  
 
   return (
     <>
@@ -72,6 +74,16 @@ export default function TopBar({ handleEnrichClick, addRow, addColumn }) {
                   <span className="font-medium">Enrich</span>
                 </>
               )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={shuffleHandler}
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20"
+            >
+              
+              Shuffle
             </Button>
 
             <Button

@@ -200,7 +200,12 @@ export default function App() {
   const handleEnrichClick = async () => {
     //need to replace this all with my code, passing down spreadsheetData as a child to be used by this function
 
-    
+      if (question.length === 0) {
+        alert('You need to set a question!');
+        setToastType('error');
+        setShowToast(true);
+        return;
+      }   
   
       if (!data) {
         setToastMessage('Cannot access spreadsheet data');
@@ -315,11 +320,29 @@ export default function App() {
       setContextText(newContext);
       // In a real app, you would also save this to a database or API
       console.log("Context updated:", newContext);
+
+      
     };
+
+    function shuffleHandler() {
+      console.log("data before shuffle is:", data);
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+      
+      const reshuffled = [...data]; // Copy to avoid mutating the original
+      shuffleArray(reshuffled);
+      console.log("data after shuffling is:", reshuffled);
+      setData(reshuffled);
+    }
 
   return (
     <div className="App">
-        <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} columnLabels={columnLabels} setColumnLabels={setColumnLabels} />
+        <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} columnLabels={columnLabels} setColumnLabels={setColumnLabels} shuffleHandler={shuffleHandler} />
         <Spreadsheet data={data} onChange={setData} columnLabels={columnLabels} styles={customStyles} />
         <ContextDrawer onContextUpdate={handleContextUpdate} contextData={contextText} question={question} setQuestion={setQuestion} />
     </div>
