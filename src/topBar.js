@@ -17,9 +17,9 @@ import {
 import { Toaster } from './components/toast';
 //import { useToast } from "@/hooks/use-toast"
 
-export default function TopBar({ handleEnrichClick, addRow, addColumn, shuffleHandler}) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [callStatus, setCallStatus] = useState({ success: 0, failed: 0, total: 0 });
+export default function TopBar({ handleEnrichClick, addRow, addColumn, shuffleHandler, callStatus, isLoading}) {
+  //const [isLoading, setIsLoading] = useState(false);
+  //const [callStatus, setCallStatus] = useState({ success: 0, failed: 0, total: 0 });
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');

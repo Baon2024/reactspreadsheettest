@@ -157,18 +157,28 @@ export default function App() {
     }
       
       console.log(`Making call to formatted number: ${formattedNumber} (original: ${phoneNumber})`);
+
+      const prompt = `You need to ask these questions, seperately: ${question}`;
       
-      /*const response = await fetch('http://localhost:5003/makeCall', { //so this sends data to backend
+      /*const response1 = await fetch('https://395c-131-111-185-176.ngrok-free.app/outbound-call', { //so this sends data to backend
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          "phone_number": formattedNumber,
-          "task": contextText,
-          "voice": "Josh", //does this need to be sent from the frontend??
-          "wait_for_greeting": true //does this need to be sent from the frontend??
+          number: formattedNumber,
+          prompt: prompt,
+          first_message: "Hi, I'm calling to ask you some questions. Are we okay to proceed?",
+          mode: 'cors'
         })
+      });*/
+
+      //this second step is after a setTimer delay, and retrieves the returned correctResponse
+
+      /*const response1 = await fetch('https://395c-131-111-185-176.ngrok-free.app/outbound-call', { //so this sends data to backend
+        headers: {
+          'Content-Type': 'application/json'
+        },
       });*/
 
       const spoofData = { formattedNumber, contextText, question}
@@ -178,7 +188,8 @@ export default function App() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(spoofData)
+        body: JSON.stringify(spoofData),
+        mode: 'cors'  // Ensure CORS mode is enabled
       });
       
       if (!response.ok) {
@@ -284,7 +295,7 @@ export default function App() {
         //const formattedDataFromCalls = dataFromCalls.forEach(/*call, index code to format each array member );*/
       //in the code, format data in needed format, and add the phonenumber for each index from formattedData above: formattedData[index]
         //console.log("formattedDataFromCalls looks like this after formatting dataFromCalls:", formattedDataFromCalls);
-        function insertReturnedData(returnedData) {
+        /*function insertReturnedData(returnedData) {
           setData(prevData => {
             // Create a new array to avoid mutation
             return prevData.map(row => {
@@ -302,7 +313,28 @@ export default function App() {
               return row; // If no match, keep row unchanged
             });
           });
-        }
+        }*/
+          function insertReturnedData(returnedData) {
+            setData(prevData => {
+              return prevData.map(row => {
+                // Find matching phone number
+                const match = returnedData.find(item => item[0] === row[0].value);
+                console.log("value of match is:", match);
+          
+                // If a match is found, update the row
+                if (match) {
+                  return [
+                    { value: match[0] }, // Keep phone number
+                    ...match.slice(1).map(value => ({ value })), // Map all additional values
+                    ...new Array(row.length - match.length).fill({ value: "" }) // Fill remaining columns with empty values
+                  ];
+                }
+          
+                // If no match is found, return the row as is (keep empty columns)
+                return row;
+              });
+            });
+          }
         insertReturnedData(dataFromCalls);
         //make columnLabels equal phoneNumber + questions
         console.log("value of question is:", question, "value of columnLabels is:", columnLabels);
@@ -312,6 +344,7 @@ export default function App() {
         console.log("value of questionDuplicate now is:", questionDuplicate)
         
         setColumnLabels(questionDuplicate);
+        setIsLoading(false);
 
      //need to format returned data
     }
@@ -342,7 +375,7 @@ export default function App() {
 
   return (
     <div className="App">
-        <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} columnLabels={columnLabels} setColumnLabels={setColumnLabels} shuffleHandler={shuffleHandler} />
+        <TopBar handleEnrichClick={handleEnrichClick} addRow={addRow} addColumn={addColumn} columnLabels={columnLabels} setColumnLabels={setColumnLabels} shuffleHandler={shuffleHandler} callStatus={callStatus} isLoading={isLoading} />
         <Spreadsheet data={data} onChange={setData} columnLabels={columnLabels} styles={customStyles} />
         <ContextDrawer onContextUpdate={handleContextUpdate} contextData={contextText} question={question} setQuestion={setQuestion} />
     </div>
